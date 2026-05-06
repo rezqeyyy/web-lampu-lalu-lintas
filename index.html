@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontrol Lampu Lalu Lintass</title>
+    <!-- Firebase SDK (Versi 8 Compat biar gampang buat pemula) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        input { padding: 10px; margin: 5px; width: 100px; }
+        button { padding: 10px 20px; background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+    <h2>Atur Durasi Lampu (Milidetik)</h2>
+    
+    <div>
+        <label>Hijau:</label>
+        <input type="number" id="inputHijau" value="4000">
+    </div>
+    <div>
+        <label>Kuning:</label>
+        <input type="number" id="inputKuning" value="2000">
+    </div>
+    <div>
+        <label>Merah:</label>
+        <input type="number" id="inputMerah" value="4000">
+    </div>
+    <br>
+    <button onclick="updateData()">Simpan Perubahan</button>
+
+    <p id="status"></p>
+
+    <script>
+        // --- KONFIGURASI FIREBASE KAMU ---
+        const firebaseConfig = {
+            apiKey: "MASUKKAN_WEB_API_KEY_FIREBASE_DISINI",
+            databaseURL: "https://MASUKKAN_URL_DATABASE_FIREBASE_DISINI.firebaseio.com",
+            projectId: "MASUKKAN_PROJECT_ID_DISINI" // Biasanya ada di depan URL database
+        };
+
+        // Inisialisasi Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Fungsi Update Data saat tombol ditekan
+        function updateData() {
+            const h = parseInt(document.getElementById('inputHijau').value);
+            const k = parseInt(document.getElementById('inputKuning').value);
+            const m = parseInt(document.getElementById('inputMerah').value);
+
+            database.ref('durasi').set({
+                hijau: h,
+                kuning: k,
+                merah: m
+            }).then(() => {
+                document.getElementById('status').innerText = "Berhasil diupdate ke Cloud!";
+                setTimeout(() => document.getElementById('status').innerText = "", 3000);
+            }).catch((error) => {
+                console.error("Gagal update:", error);
+                document.getElementById('status').innerText = "Gagal update!";
+            });
+        }
+    </script>
+</body>
+</html>
